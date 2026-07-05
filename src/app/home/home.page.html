@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Road AI Monitor</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="dark-theme" scrollY="false">
+
+  <div class="fullscreen-wrapper">
+
+    <div class="hardware-warning">
+      <span>⚠️ MANUAL SETUP: Ensure <b>Bluetooth</b> and <b>Mobile Data/GPS</b> are turned ON.</span>
+    </div>
+
+    <div id="map"></div>
+
+    <div class="telemetry-dashboard">
+      <div class="dashboard-header">
+        <h2>LIVE TELEMETRY PANEL</h2>
+
+        <div class="status-wrapper" style="display: flex; align-items: center; gap: 8px;">
+          <span *ngIf="!isLogging" style="color: #ff4d4d; font-size: 0.8rem; font-weight: bold;">SYSTEM OFFLINE</span>
+          <span *ngIf="isLogging" style="color: #00e676; font-size: 0.8rem; font-weight: bold;">AI SCANNING...</span>
+          <span class="pulse-indicator" [class.active]="isLogging"></span>
+        </div>
+      </div>
+
+      <div class="metrics-row">
+        <div class="metric-box">
+          <label>LATITUDE</label>
+          <span class="value">{{ currentLat ? currentLat.toFixed(6) : '0.000000' }}</span>
+        </div>
+        <div class="metric-box">
+          <label>LONGITUDE</label>
+          <span class="value">{{ currentLng ? currentLng.toFixed(6) : '0.000000' }}</span>
+        </div>
+        <div class="metric-box speed-box">
+          <label>SPEED</label>
+          <span class="value">{{ (currentSpeed * 3.6).toFixed(1) }} <small
+              style="font-size: 0.6rem; color: #8a8ab3;">km/h</small></span>
+        </div>
+      </div>
+
+      <div class="metrics-row sensor-row">
+        <div class="metric-box axis-x">
+          <label>ACCEL X</label>
+          <span class="value">{{ latestX ? latestX.toFixed(2) : '0.00' }}</span>
+        </div>
+        <div class="metric-box axis-y">
+          <label>ACCEL Y</label>
+          <span class="value">{{ latestY ? latestY.toFixed(2) : '0.00' }}</span>
+        </div>
+        <div class="metric-box axis-z">
+          <label>ACCEL Z</label>
+          <span class="value">{{ latestZ ? latestZ.toFixed(2) : '0.00' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-output-panel">
+      <span class="ai-title">FINAL AI CLASSIFICATION</span>
+      <div class="ai-result" [style.color]="aiPredictionColor">
+        {{ aiPredictionText }}
+      </div>
+    </div>
+
+    <div class="controls-row" style="display: flex; flex-direction: column; gap: 10px; padding: 0 10px 10px 10px;">
+
+      <ion-button expand="block" color="success" size="large" *ngIf="!isLogging" (click)="masterStartButton()"
+        style="margin: 0; font-weight: bold;">
+        CONNECT & START AI
+      </ion-button>
+
+      <ion-button expand="block" color="danger" size="large" *ngIf="isLogging" (click)="stopSystem()"
+        style="margin: 0; font-weight: bold;">
+        STOP SYSTEM
+      </ion-button>
+
+    </div>
+
+  </div>
+</ion-content>
